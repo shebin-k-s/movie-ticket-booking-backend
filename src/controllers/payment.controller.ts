@@ -4,6 +4,7 @@ import { ApiError } from "../utils/apiError";
 import { PaymentService } from "../services/payment.service";
 import { paymentStatus } from "../entities/booking.entity";
 import { appName, getCache } from "../utils/redisHelper";
+import { SeatService } from "../services/seat.service";
 
 
 export class PaymentController {
@@ -73,6 +74,8 @@ export class PaymentController {
             if (event === "payment.captured") {
                 const booking = await BookingService.getBookingById(bookingId);
                 if (booking) {
+
+                    await SeatService.bookSeat(booking.seats);
 
                     await BookingService.updateBooking(bookingId, {
                         paymentStatus: paymentStatus.SUCCESS,
