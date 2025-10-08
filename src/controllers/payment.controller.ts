@@ -3,6 +3,7 @@ import { BookingService } from "../services/booking.service";
 import { ApiError } from "../utils/apiError";
 import { PaymentService } from "../services/payment.service";
 import { paymentStatus } from "../entities/booking.entity";
+import { appName, getCache } from "../utils/redisHelper";
 
 
 export class PaymentController {
@@ -11,6 +12,8 @@ export class PaymentController {
     static initiatePayment = async (req: Request, res: Response, next: NextFunction) => {
 
         try {
+
+            const user = (req as any).user;
 
             const { bookingId, amount } = req.body;
 
@@ -23,6 +26,13 @@ export class PaymentController {
             if (booking.totalAmount !== amount) {
                 throw new ApiError("Amount mismatch", 400);
             }
+            for (const seat of booking.seats) {
+                const key = `${appName}:seat:${seat.seatId}`;
+                const lockedUserId = await getCache(key);
+                if (lockedUserId !== user.userId) {
+                    throw new ApiError(`Seat ${seat.row}${seat.number} is not locked for this user`, 409);
+                }
+            }
 
             const paymentOrder = await PaymentService.createOrder(bookingId, amount)
 
@@ -34,7 +44,7 @@ export class PaymentController {
 
         } catch (error) {
             console.log(error);
-            
+
             next(error)
         }
 
@@ -65,7 +75,9 @@ export class PaymentController {
                 if (booking) {
 
                     await BookingService.updateBooking(bookingId, {
-                        paymentStatus: paymentStatus.SUCCESS
+                        paymentStatus: paymentStatus.SUCCESS,
+                        confirmedAt: new Date()
+
                     });
                 }
             }
