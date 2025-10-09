@@ -5,6 +5,7 @@ import { ShowService } from "../services/show.service";
 import { SeatService } from "../services/seat.service";
 import { ApiError } from "../utils/apiError";
 import { UserRole } from "../entities/user.entity";
+import { SeatStatus } from "../entities/seat.entity";
 
 export class ShowController {
 
@@ -14,6 +15,8 @@ export class ShowController {
             const user = (req as any).user;
 
             const screen = await ScreenService.getScreenById(screenId);
+
+
             if (!screen) throw new ApiError("Screen not found", 404);
 
             if (user.role === UserRole.THEATER_ADMIN && screen.theater.managedBy.userId !== user.userId) {
@@ -97,6 +100,57 @@ export class ShowController {
             next(error);
         }
     }
+
+    static getShowsByScreen = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { screenId } = req.params;
+
+            const shows = await ShowService.getShowsByScreen(screenId);
+
+            if (!shows || shows.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "No shows found for this screen",
+                    shows: []
+                });
+            }
+
+            const seatResults = await Promise.all(
+                shows.map(show => SeatService.getSeatsByShow(show.showId))
+            );
+
+            const groupedByDate: Record<string, any[]> = {};
+
+            shows.forEach((show, i) => {
+                const seats = seatResults[i];
+                const totalSeats = seats.length;
+                const bookedSeats = seats.filter(s => s.status === SeatStatus.BOOKED).length;
+                const availableSeats = totalSeats - bookedSeats;
+
+                const date = new Date(show.startTime).toISOString().split("T")[0];
+                groupedByDate[date] ??= [];
+                groupedByDate[date].push({
+                    showId: show.showId,
+                    movie: show.movie.title,
+                    startTime: show.startTime,
+                    basePrice: show.basePrice,
+                    totalSeats,
+                    bookedSeats,
+                    availableSeats
+                });
+            });
+
+            res.status(200).json({
+                success: true,
+                message: "Shows fetched successfully for screen",
+                screenId,
+                showsByDate: groupedByDate
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
+
 
     static getShowById = async (req: Request, res: Response, next: NextFunction) => {
         try {

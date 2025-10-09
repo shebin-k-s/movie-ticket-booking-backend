@@ -18,6 +18,10 @@ export class Show {
     @Column({ name: 'start_time', type: "timestamp" })
     startTime: Date;
 
-    @Column({ name: 'base_price', type: "decimal", precision: 10, scale: 2 })
+    @Column({
+        name:'base_price',
+        type: "int",
+        default:100
+    })
     basePrice: number;
 }

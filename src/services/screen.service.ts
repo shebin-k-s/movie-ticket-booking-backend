@@ -9,9 +9,20 @@ export class ScreenService {
         return await this.screenRepo.save(newScreen);
     }
 
-    static getAllScreens = async () => {
+    static getAllScreens = async (managedBy?: string) => {
+        
+        const where = managedBy
+            ? { theater: { managedBy: { userId: managedBy } } }
+            : {};
         return await this.screenRepo.find({
-            relations: ["theater"]
+            where,
+            relations: ["theater"],
+            select: {
+                screenId: true,
+                name: true,
+                theater: true
+            },
+
         });
     }
 

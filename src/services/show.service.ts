@@ -72,6 +72,15 @@ export class ShowService {
         });
     }
 
+    static getShowsByScreen = async (screenId: string) => {
+        return await this.showRepo.find({
+            where: { screen: { screenId } },
+            relations: ['movie', 'screen'],
+            order: { startTime: 'ASC' }
+        });
+    };
+
+
     static deleteShow = async (showId: string) => {
         return await this.showRepo.delete({ showId });
     }

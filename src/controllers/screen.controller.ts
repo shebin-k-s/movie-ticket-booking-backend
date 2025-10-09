@@ -50,6 +50,23 @@ export class ScreenController {
         }
     }
 
+    static getMyScreens = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            
+            const user = (req as any).user;
+
+            const screens = await ScreenService.getAllScreens(user.userId);
+            
+            res.status(200).json({
+                success: true,
+                message: screens.length ? "Screens fetched successfully" : "No screens found",
+                screens
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static getScreensByTheater = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { theaterId } = req.params;
