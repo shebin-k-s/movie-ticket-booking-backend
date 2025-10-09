@@ -131,7 +131,7 @@ export class ShowController {
                 groupedByDate[date] ??= [];
                 groupedByDate[date].push({
                     showId: show.showId,
-                    movie: show.movie.title,
+                    movie: show.movie,
                     startTime: show.startTime,
                     basePrice: show.basePrice,
                     totalSeats,
