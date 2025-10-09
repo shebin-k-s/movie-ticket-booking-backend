@@ -74,7 +74,10 @@ export class SeatController {
             const booking = await BookingService.getBookingById(bookingId);
             if (!booking) throw new ApiError("Booking not found", 404);
 
+            let seatIds = []
+
             for (const seat of booking.seats) {
+                seatIds.push(seat.seatId);
                 const key = `${appName}:seat:${seat.seatId}`;
                 const lockedUserId = await getCache(key);
                 if (lockedUserId !== user.userId) {
@@ -88,6 +91,9 @@ export class SeatController {
             });
 
             await SeatService.bookSeat(booking.seats);
+
+            emitSeatUpdate(booking.show.showId, seatIds, true, false);
+
 
             const updatedBooking = await BookingService.getBookingById(bookingId);
             for (const seat of updatedBooking.seats) {

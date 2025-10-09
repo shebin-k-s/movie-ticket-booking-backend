@@ -5,6 +5,7 @@ import { PaymentService } from "../services/payment.service";
 import { paymentStatus } from "../entities/booking.entity";
 import { appName, getCache } from "../utils/redisHelper";
 import { SeatService } from "../services/seat.service";
+import { emitSeatUpdate } from "../utils/socketHelper/seatUpdate";
 
 
 export class PaymentController {
@@ -76,6 +77,11 @@ export class PaymentController {
                 if (booking) {
 
                     await SeatService.bookSeat(booking.seats);
+
+                    const seatIds = booking.seats.map(seat=>seat.seatId);
+
+                    emitSeatUpdate(booking.show.showId, seatIds, true, false);
+
 
                     await BookingService.updateBooking(bookingId, {
                         paymentStatus: paymentStatus.SUCCESS,
