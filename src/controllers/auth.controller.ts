@@ -3,6 +3,8 @@ import { ApiError } from "../utils/apiError";
 import { comparePassword, hashPassword } from "../utils/auth/hash.utils";
 import { generateAccessToken, generateRefreshToken } from "../utils/auth/jwt.utils";
 import { UserService } from "../services/user.services";
+import { UserRole } from "../entities/user.entity";
+import { TheaterService } from "../services/theater.service";
 
 export class AuthController {
     static registerUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -60,10 +62,17 @@ export class AuthController {
 
             const { password: _, ...userWithoutPassword } = user;
 
+            let theater = null;
+
+            if(user.role === UserRole.THEATER_ADMIN) {
+                theater = await TheaterService.getTheaterByManager(user.userId);
+            }
+
             res.status(200).json({
                 success: true,
                 message: "Login successful",
                 user: userWithoutPassword,
+                theater,
                 accessToken,
                 refreshToken
             });
