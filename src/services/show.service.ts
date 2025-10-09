@@ -11,10 +11,10 @@ export class ShowService {
 
     static getAllShows = async () => {
         return await this.showRepo.find({
-            relations: ["movie", "hall"],
+            relations: ["movie", "screen"],
             select: {
-                hall: {
-                    hallId: true,
+                screen: {
+                    screenId: true,
                     name: true
                 }
             }
@@ -24,10 +24,10 @@ export class ShowService {
     static getShowById = async (showId: string) => {
         return await this.showRepo.findOne({
             where: { showId },
-            relations: ["movie", "hall.theater.managedBy"],
+            relations: ["movie", "screen.theater.managedBy"],
             select: {
-                hall: {
-                    hallId: true,
+                screen: {
+                    screenId: true,
                     name: true,
                     theater: {
                         theaterId: true,
@@ -49,11 +49,11 @@ export class ShowService {
     static getShowsByMovie = async (movieId: string) => {
         return await this.showRepo.find({
             where: { movie: { movieId } },
-            relations: ["hall.theater"],
+            relations: ["screen.theater"],
             order: { startTime: "ASC" },
             select: {
-                hall: {
-                    hallId: true,
+                screen: {
+                    screenId: true,
                     name: true,
                     theater: {
                         theaterId: true,

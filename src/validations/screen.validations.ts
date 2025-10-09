@@ -1,12 +1,12 @@
 import Joi from "joi";
 
-export const hallCreateSchema = Joi.object({
+export const screenCreateSchema = Joi.object({
     name: Joi.string()
         .required()
         .messages({
-            "any.required": "Hall name is required",
-            "string.empty": "Hall name cannot be empty",
-            "string.base": "Hall name must be a string"
+            "any.required": "Screen name is required",
+            "string.empty": "Screen name cannot be empty",
+            "string.base": "Screen name must be a string"
         }),
 
     theaterId: Joi.string()

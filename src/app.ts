@@ -2,7 +2,7 @@ import express from 'express'
 import { errorHandler } from './middlewares/errorHandler'
 import authRouter from './routes/auth.routes'
 import theaterRouter from './routes/theater.routes'
-import hallRouter from './routes/hall.routes'
+import screenRouter from './routes/screen.routes'
 import showRouter from './routes/show.routes'
 import movieRouter from './routes/movie.routes'
 import seatRouter from './routes/seat.routes'
@@ -24,7 +24,7 @@ app.use(cors({
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/theaters", theaterRouter)
-app.use("/api/v1/halls", hallRouter)
+app.use("/api/v1/screens", screenRouter)
 app.use("/api/v1/shows", showRouter)
 app.use("/api/v1/movies", movieRouter)
 app.use("/api/v1/seats", seatRouter)

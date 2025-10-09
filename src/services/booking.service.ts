@@ -25,7 +25,7 @@ export class BookingService {
     static getBookingById = async (bookingId: string) => {
         return await this.bookingRepo.findOne({
             where: { bookingId },
-            relations: ["seats", "user", "show.hall.theater.managedBy"],
+            relations: ["seats", "user", "show.screen.theater.managedBy"],
             select: {
                 user: {
                     userId: true,
@@ -35,8 +35,8 @@ export class BookingService {
                 show: {
                     showId: true,
                     startTime: true,
-                    hall: {
-                        hallId: true,
+                    screen: {
+                        screenId: true,
                         name: true,
                         theater: {
                             theaterId: true,
@@ -62,7 +62,7 @@ export class BookingService {
                 user: { userId },
                 paymentStatus: paymentStatus.SUCCESS
             },
-            relations: ["seats", "show.movie", "show.hall.theater"],
+            relations: ["seats", "show.movie", "show.screen.theater"],
             select: {
                 seats: {
                     seatId: true,
@@ -75,8 +75,8 @@ export class BookingService {
                     showId: true,
                     startTime: true,
                     movie: true,
-                    hall: {
-                        hallId: true,
+                    screen: {
+                        screenId: true,
                         name: true,
                         theater: true
                     }

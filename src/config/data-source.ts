@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import dotenv from 'dotenv'
 import { User } from "../entities/user.entity";
 import { Theater } from "../entities/theater.entity";
-import { Hall } from "../entities/hall.entity";
+import { Screen } from "../entities/screen.entity";
 import { Movie } from "../entities/movie.entity";
 import { Seat } from "../entities/seat.entity";
 import { Show } from "../entities/show.entity";
@@ -26,7 +26,7 @@ export const AppDataSource = new DataSource({
     entities: [
         User,
         Theater,
-        Hall,
+        Screen,
         Movie,
         Show,
         Seat,

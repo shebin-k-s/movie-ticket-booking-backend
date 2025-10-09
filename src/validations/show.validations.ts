@@ -9,12 +9,12 @@ export const createShowSchema = Joi.object({
             "string.guid": "Movie ID must be a valid UUID"
         }),
 
-    hallId: Joi.string()
+    screenId: Joi.string()
         .guid({ version: ["uuidv4"] })
         .required()
         .messages({
-            "any.required": "Hall ID is required",
-            "string.guid": "Hall ID must be a valid UUID"
+            "any.required": "Screen ID is required",
+            "string.guid": "Screen ID must be a valid UUID"
         }),
 
     startTime: Joi.date()
@@ -38,4 +38,4 @@ export const createShowSchema = Joi.object({
     .unknown(false)
     .messages({
         "object.unknown": "Extra field {{#key}} is not allowed in request body"
-    });
+    })

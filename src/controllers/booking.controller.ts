@@ -43,7 +43,7 @@ export class BookingController {
 
             if (!booking) throw new ApiError("Booking not found", 404);
 
-            // User can view if they are owner or admin
+
             if (user.userId === booking.user.userId || user.role === UserRole.ADMIN) {
                 return res.status(200).json({
                     success: true,
@@ -52,8 +52,7 @@ export class BookingController {
                 });
             }
 
-            // Theater admin can view bookings in their theater
-            if (user.role === UserRole.THEATER_ADMIN && booking.show.hall.theater.managedBy.userId === user.userId) {
+            if (user.role === UserRole.THEATER_ADMIN && booking.show.screen.theater.managedBy.userId === user.userId) {
                 return res.status(200).json({
                     success: true,
                     message: "Booking fetched successfully",

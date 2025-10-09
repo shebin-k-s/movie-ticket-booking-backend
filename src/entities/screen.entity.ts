@@ -2,11 +2,11 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColum
 import { Theater } from "./theater.entity";
 
 
-@Entity('halls')
+@Entity('screens')
 @Unique(["theater", "name"])
-export class Hall {
-    @PrimaryGeneratedColumn("uuid", { name: 'hall_id' })
-    hallId: string;
+export class Screen {
+    @PrimaryGeneratedColumn("uuid", { name: 'screen_id' })
+    screenId: string;
 
     @Column()
     name: string;
