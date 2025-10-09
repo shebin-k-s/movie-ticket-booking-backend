@@ -9,7 +9,7 @@ export class SeatService {
     static generateSeatsForShow = async (show: Show, seatMap: any) => {
         const seats: Seat[] = [];
 
-        seatMap.blocks.forEach((block: any) => {
+        seatMap.forEach((block: any) => {
             block.layout.forEach((row: any) => {
                 row.seats.forEach((seat: any) => {
                     const newSeat = this.seatRepo.create({
