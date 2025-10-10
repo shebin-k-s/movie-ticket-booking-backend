@@ -58,9 +58,9 @@ export class ShowController {
             const { movieId } = req.params;
 
             const user = (req as any).user;
-        
-            const onlyUpcoming = user?.role === UserRole.USER;
-            const shows = await ShowService.getShowsByMovie(movieId,onlyUpcoming);
+
+            const onlyUpcoming = !user || user.role === UserRole.USER;
+            const shows = await ShowService.getShowsByMovie(movieId, onlyUpcoming);
 
             const grouped: Record<string, any> = {};
 
