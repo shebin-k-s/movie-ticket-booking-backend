@@ -62,12 +62,15 @@ export class PaymentController {
 
             const verified = PaymentService.verifyWebhookSignature(body, signature)
 
+            
             if (!verified) {
                 return res.status(400).json({
                     success: false,
                     message: "Invalid webhook signature"
                 });
             }
+            res.status(200).send("OK");
+            
             const event = body.event;
             const payment = body.payload.payment.entity;
             const bookingId = payment.notes.bookingId;
@@ -78,7 +81,7 @@ export class PaymentController {
 
                     await SeatService.bookSeat(booking.seats);
 
-                    const seatIds = booking.seats.map(seat=>seat.seatId);
+                    const seatIds = booking.seats.map(seat => seat.seatId);
 
                     emitSeatUpdate(booking.show.showId, seatIds, true, false);
 
