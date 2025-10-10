@@ -1,3 +1,4 @@
+import { MoreThan } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import { Show } from "../entities/show.entity";
 
@@ -46,9 +47,18 @@ export class ShowService {
         });
     }
 
-    static getShowsByMovie = async (movieId: string) => {
+    static getShowsByMovie = async (movieId: string, onlyUpcoming: boolean = false) => {
+        const where: any = {
+            movie: { movieId },
+        };
+
+        if (onlyUpcoming) {
+            const now = new Date();
+
+            where.startTime = MoreThan(now);
+        }
         return await this.showRepo.find({
-            where: { movie: { movieId } },
+            where,
             relations: ["screen.theater"],
             order: { startTime: "ASC" },
             select: {

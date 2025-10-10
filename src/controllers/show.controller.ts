@@ -56,7 +56,11 @@ export class ShowController {
     static getShowsByMovie = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { movieId } = req.params;
-            const shows = await ShowService.getShowsByMovie(movieId);
+
+            const user = (req as any).user;
+        
+            const onlyUpcoming = user?.role === UserRole.USER;
+            const shows = await ShowService.getShowsByMovie(movieId,onlyUpcoming);
 
             const grouped: Record<string, any> = {};
 
